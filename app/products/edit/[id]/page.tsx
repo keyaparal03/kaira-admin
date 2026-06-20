@@ -6,6 +6,7 @@ import {
   useDispatch,
   useSelector
 } from "react-redux";
+import { toast } from "react-toastify";
 
 import {
   useRouter,
@@ -97,7 +98,9 @@ export default function EditProductPage() {
           data
         })
       );
-
+       toast.success(
+        "Product updated successfully"
+      );
       router.push(
         "/products"
       );

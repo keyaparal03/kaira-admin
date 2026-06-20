@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../../../components/Sidebar";
 import Navbar from "../../../components/Navbar";
 import ProductForm from "../../../src/components/ProductForm";
-
+import { toast } from "react-toastify";
 import {
   fetchCategories
 } from "../../../src/redux/features/categorySlice";
@@ -73,6 +73,10 @@ export default function CreateProductPage() {
       await dispatch(
         createProduct(data)
       );
+       toast.success(
+        "Product created successfully"
+      );
+
 
       router.push(
         "/products"

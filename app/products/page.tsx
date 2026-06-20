@@ -8,6 +8,8 @@ import {
   deleteProduct
 } from "../../src/redux/features/productSlice";
 
+import { toast } from "react-toastify";
+
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import ProductTable from "../../src/components/ProductTable";
@@ -24,9 +26,34 @@ export default function ProductPage() {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  const handleDelete = (id: string) => {
-    dispatch(deleteProduct(id));
-  };
+ const handleDelete =
+async (id: string) => {
+
+  const confirmDelete =
+    confirm(
+      "Delete this product?"
+    );
+
+  if (!confirmDelete)
+    return;
+
+  try {
+
+    await dispatch(
+      deleteProduct(id)
+    ).unwrap();
+
+    toast.success(
+      "Product deleted successfully"
+    );
+
+  } catch {
+
+    toast.error(
+      "Delete failed"
+    );
+  }
+};
 
   return (
     <div className="admin-layout">

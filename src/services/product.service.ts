@@ -26,21 +26,21 @@ class ProductService {
     );
   }
 
+  /* UPDATE WITH POST */
   updateProduct(
     id: string,
     data: FormData
   ) {
     return apiClient.post(
-      `/products/${id}`,
+      `/products/update/${id}`,
       data
     );
   }
 
-  deleteProduct(
-    id: string
-  ) {
+  /* DELETE WITH POST */
+  deleteProduct(id: string) {
     return apiClient.post(
-      `/products/${id}`,
+      `/products/delete/${id}`,
       {}
     );
   }
