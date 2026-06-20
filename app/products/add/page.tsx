@@ -1,85 +1,116 @@
 "use client";
 
-import {
-  useState
-} from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+
+import Sidebar from "../../../components/Sidebar";
+import Navbar from "../../../components/Navbar";
+import ProductForm from "../../../src/components/ProductForm";
 
 import {
-  useDispatch
-} from "react-redux";
+  fetchCategories
+} from "../../../src/redux/features/categorySlice";
 
 import {
   createProduct
 } from "../../../src/redux/features/productSlice";
 
-export default function AddProductPage() {
+export default function CreateProductPage() {
 
   const dispatch: any =
     useDispatch();
 
-  const [formData,
-    setFormData] =
-    useState({
+  const router =
+    useRouter();
 
-      name: "",
+  /*
+  GET CATEGORY STATE
+  */
 
-      price: "",
+  const categoryState =
+    useSelector(
+      (state: any) =>
+        state.category
+    );
 
-      description: "",
+  const categories =
+    categoryState?.categories || [];
 
-      category: "",
+  /*
+  LOAD CATEGORIES
+  */
 
-      stock: ""
-    });
+  useEffect(() => {
+
+    dispatch(
+      fetchCategories()
+    );
+
+  }, [dispatch]);
+
+  /*
+  CREATE PRODUCT
+  */
 
   const handleSubmit =
-    (e: any) => {
+    async (
+      data: FormData
+    ) => {
 
-      e.preventDefault();
+      console.log("FORM DATA");
 
-      dispatch(
-        createProduct(
-          formData
-        )
+      for (
+        const pair
+        of data.entries()
+      ) {
+        console.log(
+          pair[0],
+          pair[1]
+        );
+      }
+
+      await dispatch(
+        createProduct(data)
+      );
+
+      router.push(
+        "/products"
       );
     };
 
   return (
 
-    <form
-      onSubmit={
-        handleSubmit
-      }
-    >
+    <div className="admin-layout">
 
-      <input
-        placeholder="Name"
+      <Sidebar />
 
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            name:
-              e.target.value
-          })
-        }
-      />
+      <div className="main-content">
 
-      <input
-        placeholder="Price"
+        <Navbar />
 
-        onChange={(e) =>
-          setFormData({
-            ...formData,
-            price:
-              e.target.value
-          })
-        }
-      />
+        <div className="page-header">
 
-      <button>
-        Save Product
-      </button>
+          <h2>
+            Add Product
+          </h2>
 
-    </form>
+        </div>
+
+        <ProductForm
+
+          categories={
+            categories
+          }
+
+          onSubmit={
+            handleSubmit
+          }
+
+        />
+
+      </div>
+
+    </div>
   );
 }

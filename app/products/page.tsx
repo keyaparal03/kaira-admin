@@ -11,6 +11,7 @@ import {
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import ProductTable from "../../src/components/ProductTable";
+import Link from "next/link";
 
 export default function ProductPage() {
   const dispatch: any = useDispatch();
@@ -35,10 +36,10 @@ export default function ProductPage() {
         <Navbar />
 
         <div className="page-header">
-          <h2>Products1</h2>
-          <button className="add-btn">
+          <h2>Products</h2>
+          <Link href="/products/add" className="add-btn">
             + Add Product
-          </button>
+         </Link>
         </div>
 
         <ProductTable

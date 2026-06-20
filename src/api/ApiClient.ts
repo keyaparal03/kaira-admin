@@ -1,21 +1,13 @@
 import ApiError from "./ApiError";
+import { getAccessToken } from "../utils/localStorage";
 
-import {
-  getAccessToken
-} from "../utils/localStorage";
-
-const BASE_URL =
-  "http://localhost:3500/api";
+const BASE_URL = "http://localhost:3500/api";
 
 class ApiClient {
-
   private baseUrl: string;
 
-  constructor(
-    baseUrl: string
-  ) {
-    this.baseUrl =
-      baseUrl;
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
   }
 
   private async request<T>(
@@ -24,45 +16,46 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
 
-    const token =
-      getAccessToken();
+    const token = getAccessToken();
 
-    const response =
-      await fetch(
-        `${this.baseUrl}${endpoint}`,
-        {
-          ...options,
+    const isFormData =
+      options.body instanceof FormData;
 
-          credentials:
-            "include",   // FIXED
+    const response = await fetch(
+      `${this.baseUrl}${endpoint}`,
+      {
+        ...options,
 
-          headers: {
-            "Content-Type":
-              "application/json",
+        credentials: "include",
 
-            ...(token && auth
-              ? {
-                  Authorization:
-                    `Bearer ${token}`
-                }
-              : {}),
+        headers: {
 
-            ...options.headers
-          }
+          ...(isFormData
+            ? {}
+            : {
+                "Content-Type":
+                  "application/json"
+              }),
+
+          ...(token && auth
+            ? {
+                Authorization:
+                  `Bearer ${token}`
+              }
+            : {}),
+
+          ...options.headers
         }
-      );
+      }
+    );
 
     const data =
       await response.json();
 
     if (!response.ok) {
-
       throw new ApiError(
-        data.message ||
-        "API Error",
-
+        data.message || "API Error",
         response.status,
-
         data
       );
     }
@@ -94,9 +87,10 @@ class ApiClient {
       {
         method: "POST",
 
-        body: JSON.stringify(
-          body
-        )
+        body:
+          body instanceof FormData
+            ? body
+            : JSON.stringify(body)
       }
     );
   }
@@ -112,9 +106,10 @@ class ApiClient {
       {
         method: "PUT",
 
-        body: JSON.stringify(
-          body
-        )
+        body:
+          body instanceof FormData
+            ? body
+            : JSON.stringify(body)
       }
     );
   }

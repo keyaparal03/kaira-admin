@@ -1,4 +1,5 @@
-import { apiClient } from "../api/ApiClient";
+import { apiClient }
+from "../api/ApiClient";
 
 class ProductService {
 
@@ -8,13 +9,17 @@ class ProductService {
     );
   }
 
-  getProductById(id: string) {
+  getProductById(
+    id: string
+  ) {
     return apiClient.get(
       `/products/${id}`
     );
   }
 
-  createProduct(data: any) {
+  createProduct(
+    data: FormData
+  ) {
     return apiClient.post(
       "/products",
       data
@@ -23,19 +28,23 @@ class ProductService {
 
   updateProduct(
     id: string,
-    data: any
+    data: FormData
   ) {
-    return apiClient.put(
+    return apiClient.post(
       `/products/${id}`,
       data
     );
   }
 
-  deleteProduct(id: string) {
-    return apiClient.delete(
-      `/products/${id}`
+  deleteProduct(
+    id: string
+  ) {
+    return apiClient.post(
+      `/products/${id}`,
+      {}
     );
   }
 }
 
-export default new ProductService();
+export default
+new ProductService();

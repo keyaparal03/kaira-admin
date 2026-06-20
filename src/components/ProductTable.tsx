@@ -4,6 +4,7 @@ interface Props {
   products: any[];
   onDelete: (id: string) => void;
 }
+import Link from "next/link";
 
 export default function ProductTable({
   products,
@@ -45,11 +46,11 @@ export default function ProductTable({
 
                 <td>
 
-                  <button
-                    className="edit-btn"
-                  >
-                    Edit
-                  </button>
+                  <Link href={`/products/edit/${item._id}`}>
+                    <button className="edit-btn">
+                      Edit
+                    </button>
+                  </Link>
 
                   <button
                     className="delete-btn"
