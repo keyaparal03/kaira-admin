@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useState,
+  useEffect
+} from "react";
 
 interface Props {
   initialData?: any;
@@ -14,43 +17,103 @@ interface Props {
 
 export default function ProductForm({
   initialData,
+  categories,
   onSubmit,
 }: Props) {
 
+  /*
+  FORM STATE
+  */
+
   const [formData, setFormData] =
     useState({
-      name: initialData?.name || "",
-      description:
-        initialData?.description || "",
-      price: initialData?.price || "",
-      stock: initialData?.stock || "",
-      brand: initialData?.brand || "",
+
+      name: "",
+
+      description: "",
+
+      price: "",
+
+      stock: "",
+
+      brand: "",
+
+      category: ""
     });
 
+  /*
+  IMAGE STATE
+  */
+
   const [imageFile, setImageFile] =
-    useState<File | null>(null);
+    useState<File | null>(
+      null
+    );
 
   const [preview, setPreview] =
-    useState(
-      initialData?.image || ""
-    );
+    useState("");
+
+  /*
+  LOAD EDIT DATA
+  */
+
+  useEffect(() => {
+
+    if (initialData) {
+
+      setFormData({
+
+        name:
+          initialData?.name || "",
+
+        description:
+          initialData?.description || "",
+
+        price:
+          initialData?.price || "",
+
+        stock:
+          initialData?.stock || "",
+
+        brand:
+          initialData?.brand || "",
+
+        category:
+          initialData?.category?._id || ""
+      });
+
+      /*
+      EXISTING IMAGE
+      */
+
+      if (
+        initialData?.image
+      ) {
+
+        setPreview(
+
+          `http://localhost:3500${initialData.image}`
+        );
+      }
+    }
+
+  }, [initialData]);
 
   /*
   INPUT CHANGE
   */
 
-  const handleChange = (
-    e: any
-  ) => {
+  const handleChange =
+    (e: any) => {
 
-    setFormData({
+      setFormData({
 
-      ...formData,
+        ...formData,
 
-      [e.target.name]:
-        e.target.value
-    });
-  };
+        [e.target.name]:
+          e.target.value
+      });
+    };
 
   /*
   IMAGE CHANGE
@@ -66,7 +129,12 @@ export default function ProductForm({
 
         setImageFile(file);
 
+        /*
+        NEW IMAGE PREVIEW
+        */
+
         setPreview(
+
           URL.createObjectURL(
             file
           )
@@ -111,6 +179,15 @@ export default function ProductForm({
         formData.brand
       );
 
+      data.append(
+        "category",
+        formData.category
+      );
+
+      /*
+      IMAGE ONLY IF NEW FILE
+      */
+
       if (imageFile) {
 
         data.append(
@@ -127,8 +204,12 @@ export default function ProductForm({
     <div className="form-card">
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={
+          handleSubmit
+        }
       >
+
+        {/* PRODUCT NAME */}
 
         <div className="form-group">
 
@@ -139,11 +220,17 @@ export default function ProductForm({
           <input
             type="text"
             name="name"
-            value={formData.name}
-            onChange={handleChange}
+            value={
+              formData.name
+            }
+            onChange={
+              handleChange
+            }
           />
 
         </div>
+
+        {/* DESCRIPTION */}
 
         <div className="form-group">
 
@@ -156,10 +243,60 @@ export default function ProductForm({
             value={
               formData.description
             }
-            onChange={handleChange}
+            onChange={
+              handleChange
+            }
           />
 
         </div>
+
+        {/* CATEGORY */}
+
+        <div className="form-group">
+
+          <label>
+            Category
+          </label>
+
+          <select
+            name="category"
+            value={
+              formData.category
+            }
+            onChange={
+              handleChange
+            }
+          >
+
+            <option value="">
+              Select Category
+            </option>
+
+            {categories?.map(
+
+              (
+                item: any
+              ) => (
+
+              <option
+                key={
+                  item._id
+                }
+
+                value={
+                  item._id
+                }
+              >
+                {item.name}
+
+              </option>
+            ))}
+
+          </select>
+
+        </div>
+
+        {/* PRICE + STOCK */}
 
         <div className="form-row">
 
@@ -172,8 +309,12 @@ export default function ProductForm({
             <input
               type="number"
               name="price"
-              value={formData.price}
-              onChange={handleChange}
+              value={
+                formData.price
+              }
+              onChange={
+                handleChange
+              }
             />
 
           </div>
@@ -187,13 +328,19 @@ export default function ProductForm({
             <input
               type="number"
               name="stock"
-              value={formData.stock}
-              onChange={handleChange}
+              value={
+                formData.stock
+              }
+              onChange={
+                handleChange
+              }
             />
 
           </div>
 
         </div>
+
+        {/* BRAND */}
 
         <div className="form-group">
 
@@ -204,13 +351,17 @@ export default function ProductForm({
           <input
             type="text"
             name="brand"
-            value={formData.brand}
-            onChange={handleChange}
+            value={
+              formData.brand
+            }
+            onChange={
+              handleChange
+            }
           />
 
         </div>
 
-        {/* IMAGE UPLOAD */}
+        {/* IMAGE */}
 
         <div className="form-group">
 
@@ -228,7 +379,7 @@ export default function ProductForm({
 
         </div>
 
-        {/* PREVIEW */}
+        {/* IMAGE PREVIEW */}
 
         {preview && (
 
@@ -237,10 +388,13 @@ export default function ProductForm({
             <img
               src={preview}
               alt="Preview"
+              width="150"
             />
 
           </div>
         )}
+
+        {/* SUBMIT */}
 
         <button
           className="save-btn"
