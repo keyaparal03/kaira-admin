@@ -1,23 +1,53 @@
+"use client";
+
+import Link from "next/link";
+
 export default function Sidebar() {
   return (
-    <div className="sidebar">
+    <aside className="sidebar">
 
-      <h2 className="logo">
+      <div className="logo">
         KAIRA ADMIN
-      </h2>
+      </div>
 
-      <ul>
+      <nav>
 
-        <li>Dashboard</li>
+        <ul>
 
-        <li>Products</li>
+          <li>
+            <Link href="/dashboard">
+              📊 Dashboard
+            </Link>
+          </li>
 
-        <li>Categories</li>
+          <li>
+            <Link href="/products">
+              📦 Products
+            </Link>
+          </li>
 
-        <li>Users</li>
+          <li>
+            <Link href="/categories">
+              🗂 Categories
+            </Link>
+          </li>
 
-      </ul>
+          <li>
+            <Link href="/users">
+              👤 Users
+            </Link>
+          </li>
 
-    </div>
+          <li>
+            <Link href="/orders">
+              🛒 Orders
+            </Link>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </aside>
   );
 }

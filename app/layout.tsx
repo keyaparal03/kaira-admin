@@ -1,34 +1,20 @@
 import "./globals.css";
-
-import ReduxProvider
-from "../src/redux/Provider";
-
 import "../src/styles/admin.scss";
+import "../src/styles/product.scss";
 
+import ProviderWrapper from "../src/redux/Provider";
 export default function RootLayout({
   children,
 }: {
-  children:
-    React.ReactNode;
+  children: React.ReactNode;
 }) {
-
   return (
-
-    <html
-      lang="en"
-      suppressHydrationWarning
-    >
-
+    <html lang="en">
       <body>
-
-        <ReduxProvider>
-
+        <ProviderWrapper>
           {children}
-
-        </ReduxProvider>
-
+        </ProviderWrapper>
       </body>
-
     </html>
   );
 }
